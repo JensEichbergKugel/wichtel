@@ -2,35 +2,15 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { createParticpant } from './action';
 
 export default function Home() {
 
   const names = ['Alfred', 'Karin', 'Simon', 'Thorsten', 'Jens', 'Kristina', 'Nicole', 'Vanessa'];
   const [email, setEmail] = useState('');
   const [name, setName] = useState(names[0]);
-  const [wish, setWish] = useState('');
-
 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const res = await fetch('/api/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, name, wish }),
-    });
-
-    if (res.ok) {
-      alert('Daten gesendet!');
-      setEmail('');
-      setName(names[0]);
-      setWish('');
-    } else {
-      alert('Fehler beim Senden!');
-    }
-  };
-
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 gap-12">
@@ -41,11 +21,12 @@ export default function Home() {
         Mach mit und lass die Elfen ihre Magie entfalten – dein Wichtelpartner wartet schon!
       </h1>
 
-      <form onSubmit={handleSubmit} className="w-full max-w-md bg-white p-6 rounded-lg shadow-md space-y-4">
+      <form action={createParticpant} className="w-full max-w-md bg-white p-6 rounded-lg shadow-md space-y-4">
         <div>
           <label className="block mb-1 font-medium">Wähle deinen Namen:</label>
           <select
             value={name}
+            name='name'
             required
             onChange={(e) => setName(e.target.value)}
             className="w-full border border-gray-300 dark:border-gray-700 rounded px-3 py-2"
@@ -60,6 +41,7 @@ export default function Home() {
           <label className="block mb-1 font-medium">E-Mail-Adresse</label>
           <input
             type="email"
+            name='email'
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}

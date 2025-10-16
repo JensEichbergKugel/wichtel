@@ -11,7 +11,7 @@ const pool = new Pool({
   database: process.env.POSTGRES_DB,
 });
 
-export async function query(text: string, params?: unknown[]) {
+export async function query(text: string, params: string[]) {
   const client = await pool.connect();
   try {
     const res = await client.query(text, params);
