@@ -28,11 +28,17 @@ export default function Home() {
     try {
       await createParticpant(formData);
       setStatus('success');
-    } catch (err: any) {
+    } catch (err: unknown) {
       setStatus('error');
-      setErrorMessage(err.message || 'Ein Fehler ist aufgetreten.');
+
+      if (err instanceof Error) {
+        setErrorMessage(err.message);
+      } else {
+        setErrorMessage('Ein unbekannter Fehler ist aufgetreten.');
+      }
     }
   }
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 gap-12">
       <Image src="/wichtel.png" alt="Titelbild" width={400} height={300} className='shadow-2xl'></Image>
@@ -83,6 +89,7 @@ export default function Home() {
             id="message"
             name="wish"
             rows={5}
+            onChange={(e) => setWish((e.target.value))}
             placeholder="Schreibe deine Nachricht hier..."
             className="w-full rounded-lg border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 shadow-sm p-4 text-gray-800 placeholder-gray-400 resize-none transition duration-200 ease-in-out"></textarea>
         </div>
