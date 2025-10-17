@@ -28,6 +28,9 @@ export default function Home() {
     try {
       await createParticpant(formData);
       setStatus('success');
+      setName("");
+      setEmail("");
+      setWish("");
     } catch (err: unknown) {
       setStatus('error');
 
@@ -102,10 +105,10 @@ export default function Home() {
           Absenden
         </button>
         {status === 'success' && (
-          <p className="text-green-600 mt-4">🎉 Vielen Dank! Deine Teilnahme wurde gespeichert.</p>
+          <p className="text-green-600 mt-4">🎉 Vielen Dank! Die Wichtel-Elfen basteln schon an deinem Geschenk!</p>
         )}
         {status === 'error' && (
-          <p className="text-red-600 mt-4">❌ {errorMessage}</p>
+          <p className="text-red-600 mt-4">❌ Das hat nicht funktionert. Jens hat Weihnachten versaut! </p>
         )}     </form >
     </div >
   );
