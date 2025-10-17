@@ -9,9 +9,30 @@ export default function Home() {
   const names = ['Alfred', 'Karin', 'Simon', 'Thorsten', 'Jens', 'Kristina', 'Nicole', 'Vanessa'];
   const [email, setEmail] = useState('');
   const [name, setName] = useState(names[0]);
-
+  const [wish, setWish] = useState('');
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus('idle');
+    setErrorMessage('');
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('wish', wish);
+
+    try {
+      await createParticpant(formData);
+      setStatus('success');
+    } catch (err: any) {
+      setStatus('error');
+      setErrorMessage(err.message || 'Ein Fehler ist aufgetreten.');
+    }
+  }
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 gap-12">
       <Image src="/wichtel.png" alt="Titelbild" width={400} height={300} className='shadow-2xl'></Image>
@@ -21,7 +42,7 @@ export default function Home() {
         Mach mit und lass die Elfen ihre Magie entfalten – dein Wichtelpartner wartet schon!
       </h1>
 
-      <form action={createParticpant} className="w-full max-w-md bg-white p-6 rounded-lg shadow-md space-y-4">
+      <form onSubmit={handleSubmit} className="w-full max-w-md bg-white p-6 rounded-lg shadow-md space-y-4">
         <div>
           <label className="block mb-1 font-medium">Wähle deinen Namen:</label>
           <select
@@ -73,7 +94,12 @@ export default function Home() {
         >
           Absenden
         </button>
-      </form >
+        {status === 'success' && (
+          <p className="text-green-600 mt-4">🎉 Vielen Dank! Deine Teilnahme wurde gespeichert.</p>
+        )}
+        {status === 'error' && (
+          <p className="text-red-600 mt-4">❌ {errorMessage}</p>
+        )}     </form >
     </div >
   );
 }
